@@ -98,8 +98,7 @@ class MarketDataClient:
             df = pd.DataFrame(candles)
 
             # Convert 'openTime' to datetime and set it as the index
-            df["openTime"] = pd.to_datetime(df["openTime"], unit="ns")
-
+            df["openTime"] = pd.to_datetime(df["openTime"], unit="s")
             df.set_index("openTime", inplace=True)
 
             # Rename columns for backtesting.py compatibility
