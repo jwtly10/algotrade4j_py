@@ -47,7 +47,7 @@ class MarketDataClient:
             )
         self.api_url = api_url
 
-    def get_candles(self, instrument, broker, from_date, to_date, period):
+    def get_candles(self, instrument, broker, from_date, to_date, period, limit = 10_000):
         """
         Fetch candle data for a specific instrument, broker, and time range.
 
@@ -57,6 +57,7 @@ class MarketDataClient:
             from_date (str): The start date in ISO 8601 format (e.g., '2020-10-01T00:00:00Z').
             to_date (str): The end date in ISO 8601 format (e.g., '2024-10-10T00:00:00Z').
             period (str): The candlestick period (e.g., 'M1', 'M5', 'M15', 'H1', etc.). Must be one of the SUPPORTED_PERIODS.
+            limit (int): The maximum number of candles to fetch. Defaults to 10,000 (To support backtesting.py & bokeh dependency by default).
 
         Returns:
             pandas.DataFrame: A DataFrame containing the candle data. By default formatted for compatibility with backtesting.py (open, high, low, close, volume).
@@ -87,6 +88,7 @@ class MarketDataClient:
             "from": from_date,
             "to": to_date,
             "period": period,
+            "limit": limit
         }
 
         headers = {"X-API-Key": self.api_key}
