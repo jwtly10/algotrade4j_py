@@ -21,7 +21,7 @@ class MarketDataClient:
         get_candles(instrument, broker, from_date, to_date, period): Fetches candle data for the specified instrument, broker, period, and time range.
     """
 
-    SUPPORTED_BROKERS = ["OANDA", "MT4"]
+    SUPPORTED_BROKERS = ["OANDA"]
     SUPPORTED_INSTRUMENTS = ["NAS100USD", "EURUSD", "GBPUSD"]
     SUPPORTED_PERIODS = ["M1", "M5", "M15", "M30", "H1", "H4", "D"]
 
@@ -47,13 +47,13 @@ class MarketDataClient:
             )
         self.api_url = api_url
 
-    def get_candles(self, instrument, broker, from_date, to_date, period, limit = 10_000):
+    def get_candles(self, instrument, broker, from_date, to_date, period, limit):
         """
         Fetch candle data for a specific instrument, broker, and time range.
 
         Args:
             instrument (str): The trading instrument (e.g., 'NAS100USD', 'EURUSD'). Must be one of the SUPPORTED_INSTRUMENTS.
-            broker (str): The broker from which to fetch data (e.g., 'OANDA', 'MT4'). Must be one of the SUPPORTED_BROKERS.
+            broker (str): The broker from which to fetch data (e.g., 'OANDA'). Must be one of the SUPPORTED_BROKERS.
             from_date (str): The start date in ISO 8601 format (e.g., '2020-10-01T00:00:00Z').
             to_date (str): The end date in ISO 8601 format (e.g., '2024-10-10T00:00:00Z').
             period (str): The candlestick period (e.g., 'M1', 'M5', 'M15', 'H1', etc.). Must be one of the SUPPORTED_PERIODS.
@@ -81,6 +81,9 @@ class MarketDataClient:
             raise ValueError(
                 f"Period '{period}' is not supported. Supported periods: {self.SUPPORTED_PERIODS}"
             )
+
+        if limit == None or limit <= 0:
+            raise ValueError("Limit must be a positive integer.")
 
         params = {
             "instrument": instrument,

@@ -41,7 +41,8 @@ df = client.get_candles(
     broker='OANDA',
     from_date='2020-10-01T00:00:00Z',
     to_date='2024-10-10T00:00:00Z',
-    period='M15'
+    period='M15',
+    limit=1000
 )
 
 # Display the first few rows of data
