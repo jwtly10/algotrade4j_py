@@ -2,7 +2,6 @@ import requests
 import pandas as pd
 import os
 
-
 class MarketDataClient:
     """
     MarketDataClient is a Python client for fetching market data from the AlgoTrade4J platform.
@@ -47,7 +46,7 @@ class MarketDataClient:
             )
         self.api_url = api_url
 
-    def get_candles(self, instrument, broker, from_date, to_date, period, limit):
+    def get_candles(self, instrument, broker, from_date, period, limit, to_date=None):
         """
         Fetch candle data for a specific instrument, broker, and time range.
 
@@ -55,9 +54,9 @@ class MarketDataClient:
             instrument (str): The trading instrument (e.g., 'NAS100USD', 'EURUSD'). Must be one of the SUPPORTED_INSTRUMENTS.
             broker (str): The broker from which to fetch data (e.g., 'OANDA'). Must be one of the SUPPORTED_BROKERS.
             from_date (str): The start date in ISO 8601 format (e.g., '2020-10-01T00:00:00Z').
-            to_date (str): The end date in ISO 8601 format (e.g., '2024-10-10T00:00:00Z').
             period (str): The candlestick period (e.g., 'M1', 'M5', 'M15', 'H1', etc.). Must be one of the SUPPORTED_PERIODS.
             limit (int): The maximum number of candles to fetch. Defaults to 10,000 (To support backtesting.py & bokeh dependency by default).
+            to_date (str): The end date in ISO 8601 format (e.g., '2024-10-10T00:00:00Z'). Will default to the current date @ UTC if not provided.
 
         Returns:
             pandas.DataFrame: A DataFrame containing the candle data. By default formatted for compatibility with backtesting.py (open, high, low, close, volume).
@@ -84,6 +83,12 @@ class MarketDataClient:
 
         if limit == None or limit <= 0:
             raise ValueError("Limit must be a positive integer.")
+
+        if from_date == None:
+            raise ValueError("From date must be provided.")
+
+        if to_date == None:
+            to_date = pd.Timestamp.now(tz="UTC").isoformat()
 
         params = {
             "instrument": instrument,
